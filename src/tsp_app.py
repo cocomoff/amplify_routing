@@ -1,7 +1,7 @@
 import os
 import streamlit as st
-from solver_amplify import solve
-from util import RandomTSPInstance
+from src.tsp.solver_amplify import solve
+from src.util import RandomTSPInstance
 from dotenv import load_dotenv
 import matplotlib.pyplot as plt
 

@@ -1,5 +1,5 @@
 from typing import List
-from util import RandomTSPInstance, show_plot
+from src.util import RandomTSPInstance, show_plot
 from amplify.client import FixstarsClient
 from amplify.constraint import equal_to
 from amplify import (
