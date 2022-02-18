@@ -1,18 +1,27 @@
-from typing import List
+from typing import List, Tuple
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 class RandomTSPInstance(object):
-    def __init__(self, ncity: int = 10):
+    def __init__(self, ncity: int = 10, utility: bool = False, util_range: Tuple[int] = (1, 5)):
         self.ncity = ncity
+        self.utility = utility
         self.locations = np.random.uniform(size=(ncity, 2))
+
+        if utility:
+            l, h = util_range
+            self.utilities = np.random.randint(low=l, high=h, size=(ncity))
+
         all_diffs = np.expand_dims(
             self.locations, axis=1) - np.expand_dims(self.locations, axis=0)
         self.distances = np.sqrt(np.sum(all_diffs ** 2, axis=-1))
 
     def __str__(self):
-        return f"RandomTSPInstance(\n{self.locations}\n)"
+        if self.utility:
+            return f"RandomU(\n{self.locations}\n,{self.utilities}\n)"
+        else:
+            return f"Random(\n{self.locations}\n)"
 
 
 def show_plot(instance: RandomTSPInstance, size: int = 5, route: List[int] = [], filename: str = "output.png"):
@@ -22,12 +31,16 @@ def show_plot(instance: RandomTSPInstance, size: int = 5, route: List[int] = [],
 
     # draw route
     if len(route) > 0:
-        ncity = instance.ncity
+        ncity = len(route)
         path_length = sum(
             [instance.distances[route[i]]
                 [route[(i + 1) % ncity]] for i in range(ncity)]
         )
-        plt.title(f"path length: {path_length}")
+        if not instance.utility:
+            plt.title(f"path length: {path_length}")
+        else:
+            get_util = sum(instance.utilities[j] for j in route)
+            plt.title(f"path length: {path_length}, util: {get_util}")
 
         x = [i[0] for i in instance.locations]
         y = [i[1] for i in instance.locations]
